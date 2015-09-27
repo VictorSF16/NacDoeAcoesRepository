@@ -1,0 +1,462 @@
+-- 25/09/2015
+-- Since: 1.0
+-- Versão: 3.0
+
+/*
+
+DROP TABLE T_DA_PROFISSAO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_PERFIL CASCADE CONSTRAINTS;
+DROP TABLE T_DA_PESSOA CASCADE CONSTRAINTS;
+DROP TABLE T_DA_VOLUNTARIO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_SEGMENTO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_INSTITUICAO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_TIPO_ACAO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_ACAO CASCADE CONSTRAINTS;
+DROP TABLE T_DA_ACAO_PESSOA CASCADE CONSTRAINTS;
+DROP TABLE T_DA_ACAO_PARTICIPANTE CASCADE CONSTRAINTS;
+
+DROP SEQUENCE SQ_DA_PROFISSAO;
+DROP SEQUENCE SQ_DA_PERFIL;
+DROP SEQUENCE SQ_DA_PESSOA;
+DROP SEQUENCE SQ_DA_SEGMENTO;
+DROP SEQUENCE SQ_DA_TIPO_ACAO;
+DROP SEQUENCE SQ_DA_ACAO;
+DROP SEQUENCE SQ_DA_ACAO_PESSOA;
+DROP SEQUENCE SQ_DA_ACAO_PARTICIPANTE;
+
+*/
+
+CREATE TABLE T_DA_PROFISSAO(
+  cd_profissao   NUMBER PRIMARY KEY NOT NULL,
+  nm_profissao   VARCHAR2(30) NOT NULL,
+  ds_profissao   VARCHAR2(120) NULL
+);
+
+CREATE TABLE T_DA_PERFIL(
+  cd_perfil NUMBER PRIMARY KEY NOT NULL,
+  nm_perfil VARCHAR2(60) NOT NULL,
+  ds_perfil VARCHAR2(120) NOT NULL
+);
+
+CREATE TABLE T_DA_PESSOA(
+  cd_pessoa   NUMBER PRIMARY KEY NOT NULL,
+  nm_pessoa   VARCHAR2(60) NOT NULL,
+  ds_email    VARCHAR(120) NOT NULL,
+  ds_senha    VARCHAR2(32) NOT NULL,
+  nr_telefone varchar2(11) NOT NULL,
+  cd_perfil NUMBER NOT NULL
+);
+
+CREATE TABLE T_DA_VOLUNTARIO(
+  cd_voluntario   NUMBER PRIMARY KEY NOT NULL,
+  nr_cpf          NUMBER(11) NULL,
+  dt_nascimento   VARCHAR2(10) NULL,
+  cd_profissao    NUMBER NULL
+);
+
+CREATE TABLE T_DA_SEGMENTO(
+  cd_segmento   NUMBER PRIMARY KEY NOT NULL,
+  nm_segmento   VARCHAR2(60) NOT NULL,
+  ds_segmento  VARCHAR2(120) NULL
+);
+
+CREATE TABLE T_DA_INSTITUICAO(
+  cd_instituicao  NUMBER PRIMARY KEY NOT NULL,
+  nr_cnpj         NUMBER(14) NULL,
+  ds_endereco     VARCHAR2(120) NULL,
+  cd_segmento     NUMBER NULL
+);
+
+CREATE TABLE T_DA_TIPO_ACAO(
+  cd_tipo_acao  NUMBER PRIMARY KEY NOT NULL,
+  nm_tipo_acao  VARCHAR2(60) NOT NULL,
+  ds_tipo_acao  VARCHAR2(120) NOT NULL
+);
+
+CREATE TABLE T_DA_ACAO(
+  cd_acao NUMBER PRIMARY KEY NOT NULL,
+  nm_acao VARCHAR2(60) NOT NULL,
+  ds_acao VARCHAR2(120) NOT NULL,
+  cd_tipo_acao  NUMBER NOT NULL
+);
+
+CREATE TABLE T_DA_ACAO_PESSOA(
+  cd_acao_pessoa  NUMBER PRIMARY KEY NOT NULL,
+  cd_acao         NUMBER NOT NULL,
+  cd_responsavel  NUMBER NOT NULL,
+  ds_observacao   VARCHAR2(120) NOT NULL,
+  dt_inicio_acao  VARCHAR2(10) NOT NULL,
+  dt_termino_acao VARCHAR2(10) NOT NULL
+);
+
+CREATE TABLE T_DA_ACAO_PARTICIPANTE(
+  cd_acao_participante    NUMBER PRIMARY KEY NOT NULL,
+  cd_acao_pessoa          NUMBER NOT NULL,
+  cd_participante         NUMBER NOT NULL,
+  dt_entrada_participante VARCHAR2(10) NOT NULL
+);
+
+-- Adicionando as FK's
+ALTER TABLE     T_DA_PESSOA
+ADD CONSTRAINT  FK_DA_PERFIL_PESSOA
+FOREIGN KEY     (cd_perfil)
+REFERENCES      T_DA_PERFIL (cd_perfil); 
+
+ALTER TABLE     T_DA_VOLUNTARIO
+ADD CONSTRAINT  FK_DA_PESSOA_VOLUNTARIO
+FOREIGN KEY     (cd_voluntario) 
+REFERENCES      T_DA_PESSOA (cd_pessoa);
+
+ALTER TABLE     T_DA_INSTITUICAO
+ADD CONSTRAINT  FK_DA_PESSOA_INSTITUICAO
+FOREIGN KEY     (cd_instituicao) 
+REFERENCES      T_DA_PESSOA (cd_pessoa);
+
+ALTER TABLE     T_DA_VOLUNTARIO
+ADD CONSTRAINT  FK_DA_VOLUNTARIO_PROFISSAO
+FOREIGN KEY     (cd_profissao) 
+REFERENCES      T_DA_PROFISSAO (cd_profissao);
+
+ALTER TABLE     T_DA_INSTITUICAO
+ADD CONSTRAINT  FK_DA_INSTITUICAO_SEGMENTO
+FOREIGN KEY     (cd_segmento) 
+REFERENCES      T_DA_SEGMENTO (cd_segmento);
+
+ALTER TABLE     T_DA_ACAO
+ADD CONSTRAINT  FK_DA_ACAO_TIPO_ACAO
+FOREIGN KEY     (cd_tipo_acao) 
+REFERENCES      T_DA_TIPO_ACAO (cd_tipo_acao);
+
+ALTER TABLE     T_DA_ACAO_PESSOA
+ADD CONSTRAINT  FK_DA_ACAO_PESSOA_PESSOA
+FOREIGN KEY     (cd_responsavel) 
+REFERENCES      T_DA_PESSOA (cd_pessoa);
+
+ALTER TABLE     T_DA_ACAO_PESSOA
+ADD CONSTRAINT  FK_DA_ACAO_PESSOA_ACAO
+FOREIGN KEY     (cd_acao) 
+REFERENCES      T_DA_ACAO (cd_acao);
+
+ALTER TABLE     T_DA_ACAO_PARTICIPANTE
+ADD CONSTRAINT  FK_DA_ACAO_PARTICIPANTE_RESPON
+FOREIGN KEY     (cd_acao_pessoa) 
+REFERENCES      T_DA_ACAO_PESSOA (cd_acao_pessoa);
+
+ALTER TABLE     T_DA_ACAO_PARTICIPANTE
+ADD CONSTRAINT  FK_DA_ACAO_PARTICIPANTE_PESSOA
+FOREIGN KEY     (cd_participante) 
+REFERENCES      T_DA_PESSOA (cd_pessoa);
+
+-- Adicionando UNIQUE CONSTRAINTS
+ALTER TABLE     T_DA_PROFISSAO
+ADD CONSTRAINT  UN_DA_PROFISSAO_NOME
+UNIQUE          (nm_profissao);
+
+ALTER TABLE     T_DA_PERFIL
+ADD CONSTRAINT  UN_DA_PERFIL_NOME
+UNIQUE          (nm_perfil);
+
+ALTER TABLE     T_DA_PESSOA
+ADD CONSTRAINT  UN_DA_PESSOA_EMAIL
+UNIQUE          (ds_email);
+
+ALTER TABLE     T_DA_PESSOA
+ADD CONSTRAINT  UN_DA_PESSOA_TELEFONE
+UNIQUE          (nr_telefone);
+
+ALTER TABLE     T_DA_VOLUNTARIO
+ADD CONSTRAINT  UN_DA_VOLUNTARIO_CPF
+UNIQUE          (nr_cpf);
+
+ALTER TABLE     T_DA_SEGMENTO
+ADD CONSTRAINT  UN_DA_SEGMENTO_NOME
+UNIQUE          (nm_segmento);
+
+ALTER TABLE     T_DA_INSTITUICAO
+ADD CONSTRAINT  UN_DA_INSTITUICAO_CNPJ
+UNIQUE          (nr_cnpj);
+
+ALTER TABLE     T_DA_TIPO_ACAO
+ADD CONSTRAINT  UN_DA_TIPO_ACAO_NOME
+UNIQUE          (nm_tipo_acao);
+
+ALTER TABLE     T_DA_ACAO
+ADD CONSTRAINT  UN_DA_ACAO_NOME
+UNIQUE          (nm_acao);
+
+-- Sequências para as tabelas
+CREATE SEQUENCE SQ_DA_PROFISSAO
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_PERFIL
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_PESSOA
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_SEGMENTO
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_TIPO_ACAO
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_ACAO
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_ACAO_PESSOA
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE SQ_DA_ACAO_PARTICIPANTE
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE;
+
+-- Triggers de sequência
+CREATE OR REPLACE TRIGGER TR_SQ_DA_PROFISSAO
+BEFORE INSERT ON T_DA_PROFISSAO
+FOR EACH ROW
+ WHEN (new.cd_profissao IS NULL) 
+BEGIN
+  SELECT SQ_DA_PROFISSAO.NEXTVAL 
+  INTO :new.cd_profissao
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_PERFIL
+BEFORE INSERT ON T_DA_PERFIL
+FOR EACH ROW
+ WHEN (new.cd_perfil IS NULL) 
+BEGIN
+  SELECT SQ_DA_PERFIL.NEXTVAL 
+  INTO :new.cd_perfil
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_PESSOA
+BEFORE INSERT ON T_DA_PESSOA
+FOR EACH ROW
+ WHEN (new.cd_pessoa IS NULL) 
+BEGIN
+  SELECT SQ_DA_PESSOA.NEXTVAL 
+  INTO :new.cd_pessoa
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_SEGMENTO
+BEFORE INSERT ON T_DA_SEGMENTO
+FOR EACH ROW
+ WHEN (new.cd_segmento IS NULL) 
+BEGIN
+  SELECT SQ_DA_SEGMENTO.NEXTVAL 
+  INTO :new.cd_segmento
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_TIPO_ACAO
+BEFORE INSERT ON T_DA_TIPO_ACAO
+FOR EACH ROW
+ WHEN (new.cd_tipo_acao IS NULL) 
+BEGIN
+  SELECT SQ_DA_TIPO_ACAO.NEXTVAL 
+  INTO :new.cd_tipo_acao
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_ACAO
+BEFORE INSERT ON T_DA_ACAO
+FOR EACH ROW
+ WHEN (new.cd_acao IS NULL) 
+BEGIN
+  SELECT SQ_DA_ACAO.NEXTVAL 
+  INTO :new.cd_acao
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_ACAO_PESSOA
+BEFORE INSERT ON T_DA_ACAO_PESSOA
+FOR EACH ROW
+ WHEN (new.cd_acao_pessoa IS NULL) 
+BEGIN
+  SELECT SQ_DA_ACAO_PESSOA.NEXTVAL 
+  INTO :new.cd_acao_pessoa
+  FROM dual;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SQ_DA_ACAO_PARTICIPANTE
+BEFORE INSERT ON T_DA_ACAO_PARTICIPANTE
+FOR EACH ROW
+ WHEN (new.cd_acao_participante IS NULL) 
+BEGIN
+  SELECT SQ_DA_ACAO_PARTICIPANTE.NEXTVAL 
+  INTO :new.cd_acao_participante
+  FROM dual;
+END;
+/
+
+-- Profissões
+INSERT INTO T_DA_PROFISSAO (nm_profissao, ds_profissao) VALUES('Desenvolvedor','Profissional que realiza o desenvolvimento de sistemas');
+INSERT INTO T_DA_PROFISSAO (nm_profissao, ds_profissao) VALUES('Analista','Profissional que faz a análise de sistemas');
+INSERT INTO T_DA_PROFISSAO (nm_profissao, ds_profissao) VALUES('Médico','Profissional que atua na área da saúde');
+INSERT INTO T_DA_PROFISSAO (nm_profissao, ds_profissao) VALUES('Professor','Profissional que leciona aulas');
+INSERT INTO T_DA_PROFISSAO (nm_profissao, ds_profissao) VALUES('Jardineiro','Profissional que cuida e dá manutenção em jardins');
+
+-- Perfil
+INSERT INTO T_DA_PERFIL (nm_perfil, ds_perfil) VALUES('Voluntário','Pessoa física que realiza ações sociais');
+INSERT INTO T_DA_PERFIL (nm_perfil, ds_perfil) VALUES('Instituição','Pessoa júridica que atua em um determinado sgmento e é focado em ações sociais');
+
+-- Segmentos
+INSERT INTO T_DA_SEGMENTO (nm_segmento, ds_segmento) VALUES('Saúde','Insituições que atuam na área da saúde Saúde');
+INSERT INTO T_DA_SEGMENTO (nm_segmento, ds_segmento) VALUES('Cultura','Insituições que ajudam na parte cultural');
+INSERT INTO T_DA_SEGMENTO (nm_segmento, ds_segmento) VALUES('Educação','Insituições que buscam ajudar no desenvolvimento da educação no país');
+
+-- Voluntários
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Lucas','lucas@email.com','1234','967440050',1);
+INSERT INTO T_DA_VOLUNTARIO VALUES(1,43276972816,'25/12/1995',1);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Mateus','mateus@email.com','2345','980805050',1);
+INSERT INTO T_DA_VOLUNTARIO VALUES(2,67215489632,'13/06/1995',1);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Estevão','estevao@email.com','3456','940402020',1);
+INSERT INTO T_DA_VOLUNTARIO VALUES(3,19735426842,'21/03/1996',2);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Gustavo','gustavo@email.com','4567','960603030',1);
+INSERT INTO T_DA_VOLUNTARIO VALUES(4,58749621485,'20/07/1995',1);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Victor','victor@email.com','5678','930301515',1);
+INSERT INTO T_DA_VOLUNTARIO VALUES(5,55214896647,'07/07/1995',2);
+
+-- Instituições
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('FIAP','fiap@email.com','1234','36005050',2);
+INSERT INTO T_DA_INSTITUICAO VALUES(6,12345678996521,'AV. Lins de Vasconcelos nº 1000',3);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('Viva bem','vivabem@email.com','3557','30025854',2);
+INSERT INTO T_DA_INSTITUICAO VALUES(7,99654788514233,'Rua Viva nº 750',1);
+INSERT INTO T_DA_PESSOA (nm_pessoa, ds_email, ds_senha, nr_telefone, cd_perfil) VALUES('AACD','aacd@email.com','1717','96385214',2);
+INSERT INTO T_DA_INSTITUICAO VALUES(8,12457895554121,'Rua José Pereira nº 20',1);
+
+-- Tipo de Ação
+INSERT INTO T_DA_TIPO_ACAO (nm_tipo_acao, ds_tipo_acao) VALUES('Virtual','Ações que são realizadas á distância, utilizando-se da internet');
+INSERT INTO T_DA_TIPO_ACAO (nm_tipo_acao, ds_tipo_acao) VALUES('Presencial','Ações que são realizadas na própria instituição ou em local combinado');
+INSERT INTO T_DA_TIPO_ACAO (nm_tipo_acao, ds_tipo_acao) VALUES('Semi-Presencial','Mistura de ações presenciais e a distância');
+
+-- Ação
+INSERT INTO T_DA_ACAO (nm_acao,ds_acao,cd_tipo_acao) VALUES('Coleta de Alimentos','Envolve a coleta de alimentos para uma causa',2);
+INSERT INTO T_DA_ACAO (nm_acao,ds_acao,cd_tipo_acao) VALUES('Coleta de Roupas','Envolve a coleta de roupas para uma causa',2);
+INSERT INTO T_DA_ACAO (nm_acao,ds_acao,cd_tipo_acao) VALUES('Ajuda Administrativa','Envolve ajuda na admnistração de alguma causa',1);
+INSERT INTO T_DA_ACAO (nm_acao,ds_acao,cd_tipo_acao) VALUES('Apoio','Apoio em geral. Pode ser divulgação de ações na internet, ou alguma atividade na própria instituição',3);
+INSERT INTO T_DA_ACAO (nm_acao,ds_acao,cd_tipo_acao) VALUES('Divulgação Virtual','Envolve a ajuda em divulgação de ações e campanhas na internet',1);
+
+-- Ações em andamento
+INSERT INTO T_DA_ACAO_PESSOA (cd_acao,cd_responsavel,ds_observacao,dt_inicio_acao,dt_termino_acao) VALUES(1,8,'Queremos coletar o máximo de alimentos possiveis para as crianças de nossa instituição','27/09/2015','01/10/2015');
+INSERT INTO T_DA_ACAO_PESSOA (cd_acao,cd_responsavel,ds_observacao,dt_inicio_acao,dt_termino_acao) VALUES(2,8,'Queremos coletar o máximo de roupas possiveis para as crianças de nossa instituição','27/09/2015','01/10/2015');
+INSERT INTO T_DA_ACAO_PESSOA (cd_acao,cd_responsavel,ds_observacao,dt_inicio_acao,dt_termino_acao) VALUES(3,6,'Precisamos de ajuda para administrar as ações do IHelp','27/09/2015','01/10/2015');
+INSERT INTO T_DA_ACAO_PESSOA (cd_acao,cd_responsavel,ds_observacao,dt_inicio_acao,dt_termino_acao) VALUES(4,1,'Quero ajudar em uma causa social','27/09/2015','01/10/2015');
+INSERT INTO T_DA_ACAO_PESSOA (cd_acao,cd_responsavel,ds_observacao,dt_inicio_acao,dt_termino_acao) VALUES(5,2,'Quero ajudar em algo, blabla','27/09/2015','01/10/2015');
+
+-- Participantes das ações
+-- Lucas
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(1,1,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(2,1,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(3,1,'27/09/2015');
+
+-- Mateus
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(1,2,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(3,2,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(5,2,'27/09/2015');
+
+-- Estevão
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(5,3,'27/09/2015');
+
+-- Gustavo
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(1,4,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(2,4,'27/09/2015');
+
+-- Victor
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(1,5,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(2,5,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(3,5,'27/09/2015');
+INSERT INTO T_DA_ACAO_PARTICIPANTE (cd_acao_pessoa,cd_participante,dt_entrada_participante) VALUES(4,5,'27/09/2015');
+
+/*
+
+-- Select de voluntários
+SELECT  V.CD_VOLUNTARIO "CÓDIGO",
+        P.NM_PESSOA "NOME DO VOLUNTÁRIO",
+        P.DS_EMAIL "E-MAIL",
+        V.DT_NASCIMENTO "DATA DE NASCIMENTO",
+        V.NR_CPF "CPF",
+        (SELECT COUNT(*) FROM T_DA_ACAO_PARTICIPANTE AP WHERE AP.CD_PARTICIPANTE = V.CD_VOLUNTARIO) "AÇÕES QUE PARTICIPOU",
+        (SELECT COUNT(*) FROM T_DA_ACAO_PESSOA PA WHERE PA.CD_RESPONSAVEL = V.CD_VOLUNTARIO) "AÇÕES QUE REALIZOU"
+FROM T_DA_PESSOA P INNER JOIN T_DA_VOLUNTARIO V
+  ON P.CD_PESSOA = V.CD_VOLUNTARIO;
+
+-- Select de instituições
+SELECT  I.CD_INSTITUICAO "CÓDIGO",
+        P.NM_PESSOA "NOME DA INSTITUIÇÃO",
+        P.DS_EMAIL "E-MAIL",
+        I.NR_CNPJ "CNPJ",
+        I.DS_ENDERECO "ENDEREÇO",
+        (SELECT COUNT(*) FROM T_DA_ACAO_PARTICIPANTE AP WHERE AP.CD_PARTICIPANTE = I.CD_INSTITUICAO) "AÇÕES QUE PARTICIPOU",
+        (SELECT COUNT(*) FROM T_DA_ACAO_PESSOA PA WHERE PA.CD_RESPONSAVEL = I.CD_INSTITUICAO) "AÇÕES QUE REALIZOU"
+FROM T_DA_PESSOA P INNER JOIN T_DA_INSTITUICAO I
+  ON P.CD_PESSOA = I.CD_INSTITUICAO;
+
+-- Select dos Participantes das ações
+SELECT  A.NM_ACAO "AÇÃO",
+        AP.DS_OBSERVACAO "DESCRIÇÃO DA AÇÃO",
+        PR.NM_PESSOA "RESPONSÁVEL PELA AÇÃO",
+        PP.NM_PESSOA "PARTICIPANTE DA AÇÃO",
+        APA.DT_ENTRADA_PARTICIPANTE "ENTROU NA AÇÃO DIA"
+FROM T_DA_ACAO_PARTICIPANTE APA INNER JOIN T_DA_ACAO_PESSOA AP
+  ON APA.CD_ACAO_PESSOA = AP.CD_ACAO_PESSOA
+INNER JOIN T_DA_ACAO A
+  ON AP.CD_ACAO = A.CD_ACAO
+INNER JOIN T_DA_PESSOA PR
+  ON AP.CD_RESPONSAVEL = PR.CD_PESSOA 
+INNER JOIN T_DA_PESSOA PP
+  ON APA.CD_PARTICIPANTE = PP.CD_PESSOA;
+
+SELECT * FROM T_DA_PROFISSAO;
+SELECT * FROM T_DA_PERFIL;
+SELECT * FROM T_DA_SEGMENTO; 
+SELECT * FROM T_DA_INSTITUICAO;
+SELECT * FROM T_DA_PESSOA;
+SELECT * FROM T_DA_VOLUNTARIO;
+SELECT * FROM T_DA_TIPO_ACAO;
+SELECT * FROM T_DA_ACAO;
+SELECT * FROM T_DA_ACAO_PESSOA;
+SELECT * FROM T_DA_ACAO_PARTICIPANTE
+
+*/
