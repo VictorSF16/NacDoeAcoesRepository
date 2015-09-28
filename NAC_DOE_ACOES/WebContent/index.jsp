@@ -2,16 +2,20 @@
     pageEncoding="ISO-8859-1"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Página de Login</title>
+<title>Doe Ações - Login</title>
 </head>
 <body>
+	<c:set var="teste" value="funcionou"></c:set>
+
 	<form>
 		<p>Login!!!! :D</p>
 		<p>Teste Branch</p>
+		<p>Teste da taglib: <b>${teste}</b></p>
 	</form>
+		
 </body>
 </html>
