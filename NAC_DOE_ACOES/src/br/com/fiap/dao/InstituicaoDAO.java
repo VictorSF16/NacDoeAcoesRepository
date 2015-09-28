@@ -25,15 +25,15 @@ public class InstituicaoDAO {
 		  estrutura.setString(4, instituicao.getTelefone());
 		  estrutura.execute();
 		  
-		  PreparedStatement estruturaDois = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT CD_PESSOA FROM T_DA_PESSOA WHERE DS_EMAIL = ?),?,?,?)");
-		  estruturaDois.setString(1, instituicao.getEmail());
-		  estruturaDois.setLong(2, instituicao.getCnpj());
-		  estruturaDois.setString(3, instituicao.getEndereco());
-		  estruturaDois.setInt(4, instituicao.getSegmento());
-		  estruturaDois.execute();
+		  PreparedStatement estrutura2 = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT CD_PESSOA FROM T_DA_PESSOA WHERE DS_EMAIL = ?),?,?,?)");
+		  estrutura2.setString(1, instituicao.getEmail());
+		  estrutura2.setLong(2, instituicao.getCnpj());
+		  estrutura2.setString(3, instituicao.getEndereco());
+		  estrutura2.setInt(4, instituicao.getSegmento());
+		  estrutura2.execute();
 		 
 		  estrutura.close();
-		  estruturaDois.close();
+		  estrutura2.close();
 	 }
 	
 	public List<Instituicao> find() throws Exception{
