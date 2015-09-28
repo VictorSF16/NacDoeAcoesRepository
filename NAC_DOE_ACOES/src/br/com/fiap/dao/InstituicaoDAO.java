@@ -16,26 +16,17 @@ public class InstituicaoDAO {
 		this.conexao = new ConexaoFactory().getConnection();
 	}
 	
-	public int add(Instituicao instituicao) throws Exception
+	public void add(Instituicao instituicao) throws Exception
 	{
-		PreparedStatement estrutura = conexao.prepareStatement("INSERT INTO T_DA_PESSOA VALUES(2,'teste','teste@bra.com.br','1234','1234-1234')");
-		  estrutura.execute();
-		  PreparedStatement estruturaDois = conexao.prepareStatement("SELECT CD_PESSOA FROM T_DA_PESSOA WHERE DS_EMAIL = 'teste@bra.com.br'");
-		  estruturaDois.execute();
-		  ResultSet  retornoBD = estruturaDois.executeQuery();
-		  int codigo = 0;
-		  if(retornoBD.next())
-		  {
-		   codigo = Integer.parseInt(retornoBD.getString("CD_PESSOA"));
-		  }
-		  PreparedStatement estruturaTres = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES("+codigo+",12312312,'av.martin',1)");
-		  estruturaTres.execute();
-		  estrutura.close();
-		  estruturaDois.close();
-		  retornoBD.close();
-		  estruturaTres.close();
+		PreparedStatement estrutura = conexao.prepareStatement("INSERT INTO T_DA_PESSOA VALUES(?,?,?,?,2)");
+		estrutura.executeUpdate();
+
+		estrutura.close();
 		  
-		  return codigo;
+		estrutura = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT cd_pessoa FROM T_DA_PESSOA WHERE ds_email = ?),?,?,?)");
+		estrutura.executeUpdate();
+		
+		estrutura.close();
 	}
 	
 	public List<Instituicao> find() throws Exception{

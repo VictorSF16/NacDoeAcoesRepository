@@ -22,14 +22,9 @@ public class InstituicaoTeste
 			Instituicao i = new Instituicao(codigo,nome,email,senha,telefone,cnpj,endereco,segmento);
 			
 			InstituicaoDAO idao = new InstituicaoDAO();
-			if(idao.add(i)==0)
-			{
-				System.out.println("FOI");
-			}
-			else 
-			{
-				System.out.println("ERRO");
-			}
+			
+			idao.add(i);
+			
 			System.out.println("ETAPA concluida");
 		} catch (Exception e) {
 			System.out.println(e);
