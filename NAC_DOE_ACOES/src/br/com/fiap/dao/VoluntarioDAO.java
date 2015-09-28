@@ -19,9 +19,9 @@ public class VoluntarioDAO {
 	
 	public void add(Voluntario voluntario) throws Exception{
 		
-		String query = "INSERT INTO T_DA_PESSOA() VALUES(?,?,?,?,1);" 
-				+ "INSERT INTO T_DA_VOLUNTARIO ()"
-				+ " VALUES (?,?,?,?,?,?,?)";
+		String query = "INSERT INTO T_DA_PESSOA VALUES(?,?,?,?,1);" 
+				+ "INSERT INTO T_DA_VOLUNTARIO"
+				+ " VALUES (?,?,?,?)";
 				
 		PreparedStatement estrutura = conexao.prepareStatement(query);
 		estrutura.setString(1, voluntario.getNome());
@@ -34,7 +34,6 @@ public class VoluntarioDAO {
 		ResultSet resultadoDados = estruturaCodigo.executeQuery();		
 		
 		estrutura.setString(5, resultadoDados.getString("cd_pessoa"));
-		estrutura.setString(6, voluntario.getTelefone());
 		estrutura.setLong(7, voluntario.getCpf());
 		estrutura.setString(8, voluntario.getDtNascimento());
 		estrutura.setString(9, voluntario.getProfissao());
