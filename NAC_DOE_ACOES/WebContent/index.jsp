@@ -9,7 +9,6 @@
 <title>Página de Login</title>
 </head>
 <body>
-<c:if name="" var=""></c:if>
 	<form>
 		<p>Login!!!! :D</p>
 		<p>Teste Branch</p>

@@ -23,6 +23,7 @@ private Connection conexao;
 		
 		estrutura.execute();
 		estrutura.close();
+		
 	}
 	
 	public List<Acao> find() throws Exception{
