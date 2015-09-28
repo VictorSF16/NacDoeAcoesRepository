@@ -23,10 +23,10 @@ public class InstituicaoDAO {
 
 		estrutura.close();
 		  
-		estrutura = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT cd_pessoa FROM T_DA_PESSOA WHERE ds_email = ?),?,?,?)");
-		estrutura.executeUpdate();
+		PreparedStatement estrutura2 = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT cd_pessoa FROM T_DA_PESSOA WHERE ds_email = ?),?,?,?)");
+		estrutura2.executeUpdate();
 		
-		estrutura.close();
+		estrutura2.close();
 	}
 	
 	public List<Instituicao> find() throws Exception{
