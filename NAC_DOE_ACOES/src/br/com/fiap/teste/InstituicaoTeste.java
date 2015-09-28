@@ -11,7 +11,6 @@ public class InstituicaoTeste
 	{
 		try 
 		{
-			int codigo = Integer.parseInt(JOptionPane.showInputDialog("codigo"));
 			String nome = JOptionPane.showInputDialog("Nome:");
 			String email = JOptionPane.showInputDialog("Email:");
 			String senha = JOptionPane.showInputDialog("Senha:");
@@ -19,7 +18,7 @@ public class InstituicaoTeste
 			long cnpj = Long.parseLong(JOptionPane.showInputDialog("Cnpj:"));
 			String endereco = JOptionPane.showInputDialog("Endereço:");
 			int segmento = Integer.parseInt(JOptionPane.showInputDialog("Segmento(int"));
-			Instituicao i = new Instituicao(codigo,nome,email,senha,telefone,cnpj,endereco,segmento);
+			Instituicao i = new Instituicao(nome,email,senha,telefone,cnpj,endereco,segmento);
 			
 			InstituicaoDAO idao = new InstituicaoDAO();
 			

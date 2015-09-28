@@ -11,6 +11,14 @@ public class Pessoa
 	private String telefone;
 	private boolean status;
 	
+	public Pessoa(String nome, String email, String senha, String telefone) {
+		super();
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.telefone = telefone;
+	}
+	
 	public Pessoa(int codigo,String nome, String email, String senha, String telefone) {
 		super();
 		this.codigo = codigo;

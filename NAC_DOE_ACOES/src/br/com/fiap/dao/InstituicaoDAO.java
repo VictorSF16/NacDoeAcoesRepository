@@ -2,7 +2,7 @@ package br.com.fiap.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+//import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,18 +16,25 @@ public class InstituicaoDAO {
 		this.conexao = new ConexaoFactory().getConnection();
 	}
 	
-	public void add(Instituicao instituicao) throws Exception
-	{
-		PreparedStatement estrutura = conexao.prepareStatement("INSERT INTO T_DA_PESSOA VALUES(?,?,?,?,2)");
-		estrutura.executeUpdate();
-
-		estrutura.close();
+	 public void add(Instituicao instituicao) throws Exception
+	 {
+		  PreparedStatement estrutura = conexao.prepareStatement("INSERT INTO T_DA_PESSOA(NM_PESSOA,DS_EMAIL,DS_SENHA,NR_TELEFONE,CD_PERFIL) VALUES(?,?,?,?,2)");
+		  estrutura.setString(1, instituicao.getNome());
+		  estrutura.setString(2, instituicao.getEmail());
+		  estrutura.setString(3, instituicao.getSenha());
+		  estrutura.setString(4, instituicao.getTelefone());
+		  estrutura.execute();
 		  
-		PreparedStatement estrutura2 = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT cd_pessoa FROM T_DA_PESSOA WHERE ds_email = ?),?,?,?)");
-		estrutura2.executeUpdate();
-		
-		estrutura2.close();
-	}
+		  PreparedStatement estruturaDois = conexao.prepareStatement("INSERT INTO T_DA_INSTITUICAO VALUES((SELECT CD_PESSOA FROM T_DA_PESSOA WHERE DS_EMAIL = ?),?,?,?)");
+		  estruturaDois.setString(1, instituicao.getEmail());
+		  estruturaDois.setLong(2, instituicao.getCnpj());
+		  estruturaDois.setString(3, instituicao.getEndereco());
+		  estruturaDois.setInt(4, instituicao.getSegmento());
+		  estruturaDois.execute();
+		 
+		  estrutura.close();
+		  estruturaDois.close();
+	 }
 	
 	public List<Instituicao> find() throws Exception{
 		

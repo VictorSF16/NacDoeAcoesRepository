@@ -5,6 +5,15 @@ public class Instituicao extends Pessoa {
 	private String endereco;
 	private int segmento;
 
+	public Instituicao(String nome, String email, String senha,
+			String telefone, long cnpj, String endereco,
+			int segmento) {
+		super(nome, email, senha, telefone);
+		this.cnpj = cnpj;
+		this.endereco = endereco;
+		this.segmento = segmento;
+	}
+	
 	public Instituicao(int codigo,String nome, String email, String senha,
 			String telefone, long cnpj, String endereco,
 			int segmento) {
@@ -13,6 +22,7 @@ public class Instituicao extends Pessoa {
 		this.endereco = endereco;
 		this.segmento = segmento;
 	}
+	
 	public Instituicao(int codigo,String nome, String email, String senha,
 			String telefone, boolean status, long cnpj, String endereco,
 			int segmento) {
