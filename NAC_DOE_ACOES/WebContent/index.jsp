@@ -10,12 +10,13 @@
 </head>
 <body>
 	<c:set var="teste" value="funcionou"></c:set>
-
+	
 	<form>
 		<p>Login!!!! :D</p>
 		<p>Teste Branch</p>
 		<p>Teste da taglib: <b>${teste}</b></p>
 		<p>Mateus é viadinho</p>
+		<p>Teste Victor</p>
 	</form>
 		
 </body>
